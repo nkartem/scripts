@@ -48,7 +48,23 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable --now zookeeper.service
 sudo systemctl enable --now kafka.service
-# sudo systemctl start zookeeper
-# sudo systemctl start kafka
+sudo systemctl start zookeeper
+sudo systemctl start kafka
+sudo firewall-cmd --zone=public --permanent --add-port 9092/tcp
+sudo firewall-cmd --reload
 # sudo systemctl status kafka
+# sudo systemctl status zookeeper
 #------Fihish install Kafka-------#
+#------Start install Docker-------#
+sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+sudo dnf list docker-ce
+sudo dnf install docker-ce --nobest -y
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo dnf install curl -y
+sudo docker run -p 8080:8080 \
+	-e KAFKA_CLUSTERS_0_NAME=local \
+    -e KAFKA_CLUSTERS_0_ZOOKEEPER=192.168.10.161 \
+	-e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=192.168.10.161:9092 \
+	-d provectuslabs/kafka-ui:latest 
+#------Fihish install Docker-------#
