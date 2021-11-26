@@ -1,0 +1,10 @@
+[
+    {
+      "Description": "server1",
+      "Format": "ova",
+      "UserBucket": {
+          "S3Bucket": "foriso",
+          "S3Key": "TestingRHEL8.ova"
+      }
+    }
+  ]
