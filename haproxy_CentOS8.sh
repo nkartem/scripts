@@ -70,6 +70,7 @@ EOF
 sudo firewall-cmd --permanent --add-service=http
 sudo firewall-cmd --permanent --add-service=https
 sudo firewall-cmd --zone=public --add-port=5000/tcp
+sudo firewall-cmd --zone=public --add-port=8080/tcp
 sudo firewall-cmd --reload
 sudo systemctl start haproxy
 sudo systemctl enable haproxy
