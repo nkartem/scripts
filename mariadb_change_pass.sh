@@ -5,7 +5,8 @@ sudo systemctl set-environment MYSQLD_OPTS="--skip-grant-tables --skip-networkin
 sudo systemctl start mysql
 # change password
 sudo mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('mysql');"
-mysql -u root -pmysql -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('1123456');"
+mysql -u root -pmysql -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('zxcTYU057@#');"
+mysql -u root -pzxcTYU057@\# -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('mysql');"
 #Enter password:
 #0300
 #SET PASSWORD FOR 'root'@'localhost' = PASSWORD('111111');
