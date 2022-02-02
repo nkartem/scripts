@@ -6,11 +6,12 @@
 # Storage - 20 GB
 # Operating System - RHEL 8
 #------Start install Kafka-------#
+sudo subscription-manager repos --disable rhel-8-for-x86_64-appstream-eus-source-rpms
 sudo dnf update -y
 sudo dnf -y install epel-release
 sudo dnf -y install java-11-openjdk
 cd /tmp
-sudo wget https://dlcdn.apache.org/kafka/3.0.0/kafka_2.13-3.1.0.tgz
+sudo wget https://dlcdn.apache.org/kafka/3.1.0/kafka_2.13-3.1.0.tgz
 tar xzf kafka_2.13-3.1.0.tgz
 sudo mv kafka_2.13-3.1.0 /usr/local/kafka
 sudo tee /etc/systemd/system/zookeeper.service <<EOF
