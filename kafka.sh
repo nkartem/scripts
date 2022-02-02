@@ -10,10 +10,9 @@ sudo dnf update -y
 sudo dnf -y install epel-release
 sudo dnf -y install java-11-openjdk
 cd /tmp
-#sudo wget https://dlcdn.apache.org/kafka/3.0.0/kafka-3.0.0-src.tgz
-sudo wget https://dlcdn.apache.org/kafka/3.0.0/kafka_2.13-3.0.0.tgz
-tar xzf kafka_2.13-3.0.0.tgz
-sudo mv kafka_2.13-3.0.0 /usr/local/kafka
+sudo wget https://dlcdn.apache.org/kafka/3.0.0/kafka_2.13-3.1.0.tgz
+tar xzf kafka_2.13-3.1.0.tgz
+sudo mv kafka_2.13-3.1.0 /usr/local/kafka
 sudo tee /etc/systemd/system/zookeeper.service <<EOF
 [Unit]
 Description=Apache Zookeeper server
@@ -35,6 +34,7 @@ sudo tee /etc/systemd/system/kafka.service <<EOF
 Description=Apache Kafka Server
 Documentation=http://kafka.apache.org/documentation.html
 Requires=zookeeper.service
+#After=zookeeper.service #for CentOS8
 
 [Service]
 Type=simple
@@ -46,11 +46,12 @@ ExecStop=/usr/bin/bash /usr/local/kafka/bin/kafka-server-stop.sh
 WantedBy=multi-user.target
 EOF
 sudo systemctl daemon-reload
-sudo systemctl enable --now zookeeper.service
-sudo systemctl enable --now kafka.service
+sudo systemctl enable zookeeper
+sudo systemctl enable kafka
 sudo systemctl start zookeeper
 sudo systemctl start kafka
 sudo firewall-cmd --zone=public --permanent --add-port 9092/tcp
+sudo firewall-cmd --zone=public --permanent --add-port 2181/tcp
 sudo firewall-cmd --reload
 # sudo systemctl status kafka
 # sudo systemctl status zookeeper
@@ -62,9 +63,13 @@ sudo dnf install docker-ce --nobest -y
 sudo systemctl start docker
 sudo systemctl enable docker
 sudo dnf install curl -y
-sudo docker run -p 8080:8080 \
+sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+sudo docker run --restart=always -p 8080:8080 \
 	-e KAFKA_CLUSTERS_0_NAME=local \
-    -e KAFKA_CLUSTERS_0_ZOOKEEPER=192.168.10.161 \
-	-e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=192.168.10.161:9092 \
+	-e KAFKA_CLUSTERS_0_ZOOKEEPER=192.168.10.213 \
+	-e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=192.168.10.213:9092 \
 	-d provectuslabs/kafka-ui:latest 
 #------Fihish install Docker-------#
