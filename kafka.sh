@@ -57,20 +57,10 @@ sudo firewall-cmd --reload
 # sudo systemctl status kafka
 # sudo systemctl status zookeeper
 #------Fihish install Kafka-------#
-#------Start install Docker-------#
-sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
-sudo dnf list docker-ce
-sudo dnf install docker-ce --nobest -y
-sudo systemctl start docker
-sudo systemctl enable docker
-sudo dnf install curl -y
-sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
-sudo docker run --restart=always -p 8080:8080 \
+
+podman run --restart=always -p 8080:8080 \
 	-e KAFKA_CLUSTERS_0_NAME=local \
 	-e KAFKA_CLUSTERS_0_ZOOKEEPER=192.168.10.213 \
 	-e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=192.168.10.213:9092 \
 	-d provectuslabs/kafka-ui:latest 
-#------Fihish install Docker-------#
