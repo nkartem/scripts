@@ -61,40 +61,6 @@ sudo firewall-cmd --reload
 # sudo systemctl status zookeeper
 #------Fihish install Kafka-------#
 
-# sudo yum remove -y docker \
-#                   docker-client \
-#                   docker-client-latest \
-#                   docker-common \
-#                   docker-latest \
-#                   docker-latest-logrotate \
-#                   docker-logrotate \
-#                   docker-engine \
-#                   podman \
-#                   runc
-# sudo yum install -y yum-utils
-# sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
-# sudo dnf -y update
-# sudo yum install -y docker-ce docker-ce-cli containerd.io
-
-
-#sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
-#sudo yum install -y  https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-#sudo dnf -y update
-#sudo dnf install -y docker-ce-cli
-
-#sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
-# sudo dnf config-manager --add-repo=https://download.docker.com/linux/rhel/docker-ce.repo
-# sudo dnf list docker-ce
-# sudo dnf install docker-ce --nobest -y
-# sudo systemctl start docker
-# sudo systemctl enable docker
-# sudo dnf install curl -y
-# sudo docker run --restart=always -p 8080:8080 \
-# 	-e KAFKA_CLUSTERS_0_NAME=local \
-#   -e KAFKA_CLUSTERS_0_ZOOKEEPER=192.168.10.161 \
-# 	-e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=192.168.10.161:9092 \
-# 	-d provectuslabs/kafka-ui:latest 
-
 podman run --name kafkaui --restart=always -p 8080:8080 \
 	-e KAFKA_CLUSTERS_0_NAME=local \
 	-e KAFKA_CLUSTERS_0_ZOOKEEPER=192.168.10.161 \
