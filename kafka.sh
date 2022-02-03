@@ -6,9 +6,9 @@
 # Storage - 20 GB
 # Operating System - RHEL 8
 #------Start install Kafka-------#
-sudo subscription-manager repos --disable rhel-8-for-x86_64-appstream-eus-source-rpms
-sudo dnf update -y
-sudo dnf -y install epel-release
+# sudo subscription-manager repos --disable rhel-8-for-x86_64-appstream-eus-source-rpms
+# sudo dnf update -y
+# sudo dnf -y install epel-release
 cd /tmp
 sudo wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.rpm
 sudo rpm -ivh jdk-17_linux-x64_bin.rpm
@@ -61,8 +61,64 @@ sudo firewall-cmd --reload
 # sudo systemctl status zookeeper
 #------Fihish install Kafka-------#
 
-podman run --restart=always -p 8080:8080 \
+# sudo yum remove -y docker \
+#                   docker-client \
+#                   docker-client-latest \
+#                   docker-common \
+#                   docker-latest \
+#                   docker-latest-logrotate \
+#                   docker-logrotate \
+#                   docker-engine \
+#                   podman \
+#                   runc
+# sudo yum install -y yum-utils
+# sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+# sudo dnf -y update
+# sudo yum install -y docker-ce docker-ce-cli containerd.io
+
+
+#sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+#sudo yum install -y  https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+#sudo dnf -y update
+#sudo dnf install -y docker-ce-cli
+
+#sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+# sudo dnf config-manager --add-repo=https://download.docker.com/linux/rhel/docker-ce.repo
+# sudo dnf list docker-ce
+# sudo dnf install docker-ce --nobest -y
+# sudo systemctl start docker
+# sudo systemctl enable docker
+# sudo dnf install curl -y
+# sudo docker run --restart=always -p 8080:8080 \
+# 	-e KAFKA_CLUSTERS_0_NAME=local \
+#   -e KAFKA_CLUSTERS_0_ZOOKEEPER=192.168.10.161 \
+# 	-e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=192.168.10.161:9092 \
+# 	-d provectuslabs/kafka-ui:latest 
+
+podman run --name kafkaui --restart=always -p 8080:8080 \
 	-e KAFKA_CLUSTERS_0_NAME=local \
 	-e KAFKA_CLUSTERS_0_ZOOKEEPER=192.168.10.161 \
 	-e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=192.168.10.161:9092 \
-	-d provectuslabs/kafka-ui:latest 
+	-d provectuslabs/kafka-ui:latest
+
+
+############## start create service for user ####################
+# mkdir -p .config/systemd/user
+# cd .config/systemd/user/
+# podman generate systemd --new --name kafkaui --files > /home/lion/.config/systemd/user/kafkaui.service
+
+# cd .config/systemd/user/
+# systemctl --user daemon-reload
+# systemctl --user enable container-kafkaui.service
+# systemctl --user restart container-kafkaui.service
+# systemctl --user status container-kafkaui.service
+############## and create service ####################
+
+############## start create service for root ####################
+# sudo nano  /etc/systemd/system/kafkaui.service
+# sudo podman generate systemd --new --name kafkaui
+# sudo nano  /etc/systemd/system/kafkaui.service
+# sudo systemctl daemon-reload
+# sudo systemctl enable kafkaui.service
+# sudo systemctl start kafkaui.service
+############## end create service for root ####################
