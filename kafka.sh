@@ -7,6 +7,7 @@
 # Operating System - RHEL 8
 #------Start install Kafka-------#
 # sudo subscription-manager repos --disable rhel-8-for-x86_64-appstream-eus-source-rpms
+# sudo subscription-manager repos --disable rhel-8-for-x86_64-baseos-rpms
 # sudo dnf update -y
 # sudo dnf -y install epel-release
 cd /tmp
