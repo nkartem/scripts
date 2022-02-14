@@ -69,6 +69,10 @@ podman run --name kafkaui --restart=always -p 8080:8080 \
 	-d provectuslabs/kafka-ui:latest
 
 
+podman run --name kafkaui --restart=always -p 8080:8080 -e KAFKA_CLUSTERS_0_NAME=local -e KAFKA_CLUSTERS_0_ZOOKEEPER=192.168.10.161 -e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=192.168.10.161:9092 -d provectuslabs/kafka-ui:latest
+
+
+
 ############## start create service for user ####################
 # mkdir -p .config/systemd/user
 # cd .config/systemd/user/
