@@ -5,9 +5,10 @@ sudo dnf install docker netavark -y
 # docker run -d --name=grafana -p 3000:3000 grafana/grafana
 sudo firewall-cmd --add-port=9090/tcp --permanent
 sudo firewall-cmd --add-port=9100/tcp --permanent
+sudo firewall-cmd --add-port=9200/tcp --permanent
 sudo firewall-cmd --add-port=3000/tcp --permanent
 sudo firewall-cmd --reload
-sudo mkdir -p /opt/monitoring/prometheus/prometheus_data
+sudo mkdir -p /opt/monitoring/prometheus/data
 sudo mkdir -p /opt/monitoring/grafana/provisioning/
 
 sudo chown lion:lion -R /opt/
@@ -22,7 +23,7 @@ networks:
     driver: bridge
     
 #volumes:
-#  prometheus_data:  /opt/monitoring/prometheus/prometheus_data
+#  prometheus_data:  /opt/monitoring/prometheus/data
 
 services:
   node-exporter:
@@ -40,8 +41,8 @@ services:
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
     expose:
       - 9100
-    ports:
-      - 9100:9100
+#    ports:
+#      - 9100:9100
     environment:
       TZ: "Europe/Kiev"
     networks:
@@ -53,17 +54,17 @@ services:
     restart: unless-stopped
     volumes:
       - /opt/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-#      - /opt/monitoring/prometheus/prometheus_data:/prometheus
-#    command:
-#      - '--config.file=/etc/prometheus/prometheus.yml'
-#      - '--storage.tsdb.path=/prometheus'
-#      - '--web.console.libraries=/etc/prometheus/console_libraries'
-#      - '--web.console.templates=/etc/prometheus/consoles'
-#      - '--web.enable-lifecycle'
+#      - /opt/monitoring/prometheus/data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
     expose:
       - 9090
-    ports:
-      - 9090:9090
+#    ports:
+#      - 9090:9090
     environment:
       TZ: "Europe/Kiev"
     networks:
@@ -86,18 +87,37 @@ services:
       TZ: "Europe/Kiev"
     networks:
       - monitoring
-#######Monitoring Containers
-  cadvisor-exporter:
-    container_name: "cadvisor-exporter"
-    image: google/cadvisor
-    ports:
-      - "9200:8080"
-    volumes:
-      - "/:/rootfs:ro"
-      - "/var/run:/var/run:rw"
-      - "/sys:/sys:ro"
-      - "/var/lib/docker/:/var/lib/docker:ro"
+# #######Monitoring Containers only Docker
+#   cadvisor-exporter:
+#     container_name: "cadvisor-exporter"
+#     image: google/cadvisor
+#     ports:
+#       - "9200:8080"
+#     volumes:
+#       - "/:/rootfs:ro"
+#       - "/var/run:/var/run:rw"
+#       - "/sys:/sys:ro"
+#       - "/var/lib/docker/:/var/lib/docker:ro"
+#     restart: unless-stopped
+    # networks:
+    #   - monitoring
+####Monitoring MySQL  
+  mysql-exporter:
+    image: prom/mysqld-exporter
+    container_name: mysql-exporter
     restart: unless-stopped
+    environment:
+    - DATA_SOURCE_NAME=${MYSQL_USER_EXPORTER}:${MYSQL_PASSWORD_EXPORTER}@(mysql:3306)/
+    ports:
+      - 9104:9104
+    networks:
+      - monitoring
+    #mem_limit: 128m           # for docker-compose v2 only
+    #mem_reservation: 64m      # for docker-compose v2 only
+    logging:
+        driver: "json-file"
+        options:
+          max-size: "5m"
 EOF
 
 cd  /opt/monitoring/prometheus
@@ -137,6 +157,22 @@ scrape_configs:
     static_configs:
     - targets: ['node-exporter:9100']
 
+  - job_name: containers
+    static_configs:
+    - targets: ['node-exporter:9200']
+
+  - job_name: server123
+    static_configs:
+    - targets: ['192.168.1.111:9100']
+    - targets: ['192.168.1.111:9104']
+    - targets: ['192.168.1.111:8088']
+
+  - job_name: 'asterisk_res_prometheus'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['asterisk_ip:8088']
+
+
 EOF
 sudo chown lion:lion -R /opt/
 sudo chmod 777 -R /opt/
@@ -147,4 +183,5 @@ sudo pip3 install podman-compose
 # # username: admin
 # # password: admin
 
-###1860
+###1860 
+####7362 https://grafana.com/grafana/dashboards/7362-mysql-overview/
