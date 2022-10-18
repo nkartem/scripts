@@ -186,6 +186,7 @@ scrape_configs:
     - targets: ['192.168.1.111:9100']
     - targets: ['192.168.1.111:9104']
     - targets: ['192.168.1.111:8088']
+    - targets: ['192.168.1.111:9256']
 
   - job_name: 'asterisk_res_prometheus'
     metrics_path: /metrics
