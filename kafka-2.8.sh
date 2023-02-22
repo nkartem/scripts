@@ -2,8 +2,8 @@
 sudo dnf install -y java-11-openjdk
 cd /tmp
 sudo wget https://downloads.apache.org/kafka/2.8.2/kafka_2.13-2.8.2.tgz
-sudo tar xzf kafka_2.13-2.6.0.tgz
-sudo mv kafka_2.13-2.6.0 /opt/kafka
+sudo tar xzf kafka_2.13-2.8.2.tgz
+sudo mv kafka_2.13-2.8.2 /opt/kafka
 cd /opt/kafka/
 sudo tee /etc/systemd/system/zookeeper.service <<EOF
 [Unit]
