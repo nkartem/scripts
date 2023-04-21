@@ -44,6 +44,6 @@ sudo systemctl enable --now kafka.service
 sudo systemctl status zookeeper.service
 sudo systemctl status kafka.service
 sudo firewall-cmd --zone=public --permanent --add-port 9092/tcp
-sudo firewall-cmd --zone=public --permanent --add-port 9092/tcp
+sudo firewall-cmd --zone=public --permanent --add-port 9093/tcp
 sudo firewall-cmd --zone=public --permanent --add-port 8080/tcp
 sudo firewall-cmd --reload
