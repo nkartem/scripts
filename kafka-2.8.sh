@@ -1,7 +1,7 @@
 #!/bin/bash
 sudo dnf install -y java-11-openjdk
 cd /tmp
-sudo wget https://downloads.apache.org/kafka/2.8.2/kafka_2.13-2.8.2.tgz
+sudo wget https://archive.apache.org/dist/kafka/2.8.2/kafka_2.13-2.8.2.tgz
 sudo tar xzf kafka_2.13-2.8.2.tgz
 sudo mv kafka_2.13-2.8.2 /opt/kafka
 cd /opt/kafka/
